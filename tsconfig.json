@@ -21,7 +21,11 @@
     "noFallthroughCasesInSwitch": true,
 
     "baseUrl": ".",
+    "typeRoots": ["./src/@types"],
     "paths": {
+      "@ui/*": ["./src/ui/*"],
+      "@pages": ["./src/pages"],
+      "@router": ["./src/router"],
       "@/*": ["./src/*"],
     }
   },

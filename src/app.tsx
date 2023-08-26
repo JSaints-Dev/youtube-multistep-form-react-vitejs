@@ -1,7 +1,11 @@
+import { Suspense } from 'react'
+
+import { Router } from '@router'
+
 export function App() {
   return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Router />
+    </Suspense>
   )
 }
