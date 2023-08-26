@@ -1,7 +1,5 @@
+import { HomeTemplate } from '@ui/templates'
+
 export default function HomePage() {
-  return (
-    <div>
-      <h1>Home Page</h1>
-    </div>
-  )
+  return <HomeTemplate />
 }

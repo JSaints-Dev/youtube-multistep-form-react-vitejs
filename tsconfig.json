@@ -22,6 +22,7 @@
 
     "baseUrl": ".",
     "paths": {
+      "@ui/*": ["./src/ui/*"],
       "@pages": ["./src/pages"],
       "@router": ["./src/router"],
       "@/*": ["./src/*"],
