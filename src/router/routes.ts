@@ -1,3 +1,6 @@
-export const routes = {
+export const routes: {
+  [key: string]: Route
+} = {
   HOME: '/',
-} as const
+  MULTI_STEP_FORM: '/multi-step-form',
+}
