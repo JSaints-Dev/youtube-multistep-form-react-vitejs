@@ -1,64 +1,54 @@
-import { ReactNode } from 'react'
+import { useEffect } from 'react'
 
-type StepsProps = {
-  currentStep: number
-  steps: {
-    label: string
-    value?: string | number | ReactNode
-    id: number
-  }[]
-}
+import { StepsProps } from './steps.types'
 
 export function Steps({ currentStep, steps }: StepsProps) {
+  const isRepeatOrder = steps.some(
+    (step, index) => steps.findIndex((s) => s.order === step.order) !== index,
+  )
+
+  useEffect(() => {
+    if (isRepeatOrder) {
+      console.error(
+        '[APP ERROR] There are repeated orders in the steps array. Please, check the steps array.',
+      )
+    }
+  }, [isRepeatOrder])
+
   return (
     <div className="w-full">
-      <div className="flex flex-row items-start">
-        {steps.map((step) => (
-          <div
-            key={step.id}
-            style={{
-              flex: '1 1 0%',
-              position: 'relative',
-            }}
-          >
-            {step.id !== 1 && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '1.25rem',
-                  left: 'calc(-50% + 2.5rem)',
-                  right: 'calc(50% + 2.5rem)',
-                }}
-              >
-                <span className="block border-t-[1px] border-t-dark" />
+      <div className="flex items-start">
+        {steps
+          .sort((a, b) => a.order - b.order)
+          .map((step) => {
+            const isDisabled = step.order > currentStep
+            return (
+              <div key={step.order} className="relative flex-1">
+                {step.order !== 1 && (
+                  <div className="absolute left-[calc(-50%+2.5rem)] right-[calc(50%+2.5rem)] top-[1.25rem]">
+                    <span
+                      data-is-disabled={isDisabled}
+                      className="block border-t-[1px] border-dark data-[is-disabled='true']:border-primary"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col items-center">
+                  <span
+                    data-is-disabled={isDisabled}
+                    className="flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full bg-dark font-bold text-light data-[is-disabled='true']:bg-primary"
+                  >
+                    {step.value}
+                  </span>
+                  <span
+                    data-is-disabled={isDisabled}
+                    className="w-full text-center font-semibold text-dark data-[is-disabled='true']:text-primary"
+                  >
+                    {step.label}
+                  </span>
+                </div>
               </div>
-            )}
-            <span
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <span
-                style={{
-                  display: 'flex',
-                  height: '2.5rem',
-                  width: '2.5rem',
-                  flexShrink: 0,
-                  fontWeight: 'bolder',
-                  borderRadius: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                className="bg-dark text-light"
-              >
-                {step.value}
-              </span>
-              <span className="w-full text-center">{step.label}</span>
-            </span>
-          </div>
-        ))}
+            )
+          })}
       </div>
     </div>
   )
