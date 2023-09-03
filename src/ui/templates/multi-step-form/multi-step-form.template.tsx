@@ -1,54 +1,30 @@
-import { ReactNode, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input, Steps } from '@ui/shared'
+import { Steps } from '@ui/shared'
 import { z } from 'zod'
 
-const STEPS: {
-  label: string
-  value?: string | number | ReactNode
-  order: number
-}[] = [
-  {
-    label: 'Informações Pessoais',
-    order: 1,
-    value: 1,
-  },
-  {
-    label: 'Cargo Profissional',
-    order: 2,
-    value: 2,
-  },
-  {
-    label: 'Confirme seus dados',
-    order: 3,
-    value: 3,
-  },
-]
-
-const schema = z.object({
-  firstName: z.string().nonempty('First name is required'),
-  lastName: z.string(),
-  age: z.number(),
-  email: z.string().email('Invalid email'),
-})
-
-type FormValues = z.infer<typeof schema>
+import { FORMS, STEPS } from './multi-step-form.content'
+import { FormFieldsValue } from './multi-step-form.types'
+import { Actions } from './subcomponents'
 
 export const MultiStepTemplate = () => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const formMethods = useForm<FormFieldsValue>({
+    mode: 'onBlur',
+    resolver: zodResolver(
+      FORMS.find((form) => form.order === currentStep)?.validationSchema ??
+        z.object({}),
+    ),
   })
 
-  function onSubmit(data: FormValues) {
-    console.log(data)
+  function handleFinishStep() {
+    console.log(formMethods.getValues())
+  }
+
+  function onSubmit() {
     if (currentStep < STEPS.length) {
       nextStep()
     }
@@ -72,64 +48,20 @@ export const MultiStepTemplate = () => {
         <Steps steps={STEPS} currentStep={currentStep} />
       </div>
       <section className="flex w-[90%] max-w-[850px] rounded-lg bg-dark">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex w-full flex-col gap-4 p-8"
-        >
-          <Input
-            {...register('firstName')}
-            placeholder="Your first name here..."
-            label="First Name*:"
-            errorMessage={errors.firstName?.message}
-          />
-          <Input
-            {...register('lastName')}
-            label="Last Name:"
-            placeholder="Your last name here..."
-            errorMessage={errors.lastName?.message}
-          />
-          <Input
-            {...register('age', { valueAsNumber: true })}
-            label="Age*:"
-            type="number"
-            placeholder="Your age here..."
-            errorMessage={errors.age?.message}
-          />
-          <Input
-            {...register('email')}
-            name="email"
-            label="Email*:"
-            placeholder="example@gmail.com"
-            errorMessage={errors.email?.message}
-          />
-
-          <div className="flex justify-end gap-3">
-            {currentStep > 1 && (
-              <button
-                type="button"
-                onClick={previousStep}
-                className="rounded-md border border-secondary p-2 text-secondary"
-              >
-                Back
-              </button>
-            )}
-            {currentStep < STEPS.length ? (
-              <button
-                type="submit"
-                className="min-w-[5rem] rounded-md border border-secondary bg-secondary p-2 text-dark"
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="w-20 rounded-md border border-primary bg-primary p-2 text-light"
-              >
-                Confirm
-              </button>
-            )}
-          </div>
-        </form>
+        <FormProvider {...formMethods}>
+          <form
+            onSubmit={formMethods.handleSubmit(onSubmit)}
+            className="flex w-full flex-col p-8"
+          >
+            {FORMS.find((form) => form.order === currentStep)?.component}
+            <Actions
+              currentStep={currentStep}
+              previousStep={previousStep}
+              stepsLength={STEPS.length}
+              handleFinishStep={handleFinishStep}
+            />
+          </form>
+        </FormProvider>
       </section>
     </main>
   )
