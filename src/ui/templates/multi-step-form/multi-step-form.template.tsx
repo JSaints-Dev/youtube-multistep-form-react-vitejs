@@ -13,7 +13,7 @@ export const MultiStepTemplate = () => {
   const [currentStep, setCurrentStep] = useState(1)
 
   const formMethods = useForm<FormFieldsValue>({
-    mode: 'onBlur',
+    mode: 'all',
     resolver: zodResolver(
       FORMS.find((form) => form.order === currentStep)?.validationSchema ??
         z.object({}),
