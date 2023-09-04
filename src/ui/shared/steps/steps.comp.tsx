@@ -19,6 +19,7 @@ export function Steps({ currentStep, steps }: StepsProps) {
     <div className="w-full">
       <div className="flex items-start">
         {steps
+          .map((e) => e)
           .sort((a, b) => a.order - b.order)
           .map((step) => {
             const isDisabled = step.order > currentStep

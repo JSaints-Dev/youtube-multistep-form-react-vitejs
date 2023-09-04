@@ -20,7 +20,7 @@ export const Actions = ({
       {currentStep < stepsLength ? (
         <button
           type="submit"
-          className="min-w-[5rem] rounded-md border border-secondary bg-secondary p-2 text-dark"
+          className="rounded-md border border-secondary bg-secondary p-2 text-dark"
         >
           Próximo
         </button>
@@ -28,7 +28,7 @@ export const Actions = ({
         <button
           type="button"
           onClick={handleFinishStep}
-          className="w-20 rounded-md border border-primary bg-primary p-2 text-light"
+          className="rounded-md border border-primary bg-primary p-2 text-light"
         >
           Confirmar
         </button>
