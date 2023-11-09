@@ -5,18 +5,21 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Steps } from '@ui/shared'
 import { z } from 'zod'
 
-import { FORMS, STEPS } from './multi-step-form.content'
+import { FORMS_STEPS } from './multi-step-form.content'
 import { FormFieldsValue } from './multi-step-form.types'
 import { Actions } from './subcomponents'
 
+const STEPS_LENGTH = FORMS_STEPS.length
+const FIRST_STEP = 1
+
 export const MultiStepTemplate = () => {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(FIRST_STEP)
 
   const formMethods = useForm<FormFieldsValue>({
-    mode: 'all',
+    mode: 'onBlur',
     resolver: zodResolver(
-      FORMS.find((form) => form.order === currentStep)?.validationSchema ??
-        z.object({}),
+      FORMS_STEPS.find((form) => form.order === currentStep)
+        ?.validationSchema ?? z.object({}),
     ),
   })
 
@@ -24,14 +27,8 @@ export const MultiStepTemplate = () => {
     console.log(formMethods.getValues())
   }
 
-  function onSubmit() {
-    if (currentStep < STEPS.length) {
-      nextStep()
-    }
-  }
-
   function nextStep() {
-    if (currentStep < STEPS.length) {
+    if (currentStep < STEPS_LENGTH) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -45,19 +42,19 @@ export const MultiStepTemplate = () => {
   return (
     <main className="flex min-h-[100vh] w-full flex-col items-center gap-14 bg-secondary pt-20">
       <div className="flex w-full max-w-5xl">
-        <Steps steps={STEPS} currentStep={currentStep} />
+        <Steps steps={FORMS_STEPS} currentStep={currentStep} />
       </div>
       <section className="flex w-[90%] max-w-[850px] rounded-lg bg-dark">
         <FormProvider {...formMethods}>
           <form
-            onSubmit={formMethods.handleSubmit(onSubmit)}
+            onSubmit={formMethods.handleSubmit(nextStep)}
             className="flex w-full flex-col p-8"
           >
-            {FORMS.find((form) => form.order === currentStep)?.component}
+            {FORMS_STEPS.find((form) => form.order === currentStep)?.component}
             <Actions
               currentStep={currentStep}
               previousStep={previousStep}
-              stepsLength={STEPS.length}
+              stepsLength={STEPS_LENGTH}
               handleFinishStep={handleFinishStep}
             />
           </form>

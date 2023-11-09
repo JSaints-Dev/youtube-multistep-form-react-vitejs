@@ -10,14 +10,23 @@ import {
 export type FormFieldsValue = PersonalInfoFormFieldsValue &
   ProfessionalInfoFormFieldsValue
 
-export type Step = {
-  label: string
-  value?: string | number | ReactNode
+export type FormStep = {
   order: number
-}
-
-export type StepForm = {
-  order: number
+  section: string
+  stepValue?: string | number | ReactNode
   component: ReactNode
   validationSchema?: z.ZodObject<ZodRawShape>
+}
+
+export type FormFieldsValueConstants<T> = {
+  section: {
+    name: keyof FormFieldsValue
+    title: string
+  }
+  fields: {
+    [key in keyof T]: {
+      label: string
+      placeholder: string
+    }
+  }
 }

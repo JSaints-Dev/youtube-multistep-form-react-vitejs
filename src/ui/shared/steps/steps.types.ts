@@ -3,8 +3,8 @@ import { ReactNode } from 'react'
 export type StepsProps = {
   currentStep: number
   steps: {
-    label: string
-    value?: string | number | ReactNode
+    section: string
+    stepValue?: string | number | ReactNode
     order: number
   }[]
 }

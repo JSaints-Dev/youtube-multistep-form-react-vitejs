@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { Input } from '@ui/shared'
 
+import { PROFESSIONAL_INFO_CONSTANTS } from './constants'
 import { ProfessionalInfoFormFieldsValue } from './form-professional-info.types'
 
 export const FormProfessionalInfo = () => {
@@ -14,40 +15,44 @@ export const FormProfessionalInfo = () => {
   } = useFormContext<ProfessionalInfoFormFieldsValue>()
 
   useEffect(() => {
-    setFocus('jobTitle')
+    setFocus('professionalInfo.jobTitle')
   }, [setFocus])
 
   return (
     <section className="flex flex-col gap-4">
       <Input
-        {...register('jobTitle')}
-        label="Cargo*:"
-        placeholder="Digite seu cargo aqui..."
-        errorMessage={errors.jobTitle?.message}
+        {...register('professionalInfo.jobTitle')}
+        label={PROFESSIONAL_INFO_CONSTANTS.fields.jobTitle.label}
+        placeholder={PROFESSIONAL_INFO_CONSTANTS.fields.jobTitle.placeholder}
+        errorMessage={errors.professionalInfo?.jobTitle?.message}
       />
       <Input
-        {...register('company')}
-        label="Empresa*:"
-        placeholder="Digite sua empresa aqui..."
-        errorMessage={errors.company?.message}
+        {...register('professionalInfo.company')}
+        label={PROFESSIONAL_INFO_CONSTANTS.fields.company.label}
+        placeholder={PROFESSIONAL_INFO_CONSTANTS.fields.company.placeholder}
+        errorMessage={errors.professionalInfo?.company?.message}
       />
       <Input
-        {...register('yearsOfExperience', { valueAsNumber: true })}
-        label="Anos de experiência*:"
+        {...register('professionalInfo.yearsOfExperience', {
+          valueAsNumber: true,
+        })}
+        label={PROFESSIONAL_INFO_CONSTANTS.fields.yearsOfExperience.label}
+        placeholder={
+          PROFESSIONAL_INFO_CONSTANTS.fields.yearsOfExperience.placeholder
+        }
+        errorMessage={errors.professionalInfo?.yearsOfExperience?.message}
         type="number"
-        placeholder="Digite seus anos de experiência aqui..."
-        errorMessage={errors.yearsOfExperience?.message}
       />
       <Controller
-        name="salary"
+        name="professionalInfo.salary"
         control={control}
         render={({ field }) => (
           <Input
             {...field}
             value={field.value ?? ''}
-            label="Salário*:"
-            placeholder="Digite seu salário aqui..."
-            errorMessage={errors.salary?.message}
+            label={PROFESSIONAL_INFO_CONSTANTS.fields.salary.label}
+            placeholder={PROFESSIONAL_INFO_CONSTANTS.fields.salary.placeholder}
+            errorMessage={errors.professionalInfo?.salary?.message}
             onChange={(event) => {
               function formatToCurrency(value: string): string {
                 const result = value.replace(/\D/g, '')

@@ -1,5 +1,6 @@
-import { professionalInfoSchema } from '@ui/templates/multi-step-form/validations'
 import { z } from 'zod'
+
+import { professionalInfoSchema } from './form-professional-info.schema'
 
 export type ProfessionalInfoFormFieldsValue = z.infer<
   typeof professionalInfoSchema

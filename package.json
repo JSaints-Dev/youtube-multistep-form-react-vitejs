@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext .tsx,.ts",
     "lint:fix": "npm run lint -- --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "3.3.1",
